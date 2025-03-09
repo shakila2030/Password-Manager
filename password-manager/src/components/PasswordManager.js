@@ -1,32 +1,40 @@
 import React, { useState } from 'react';
-import { Container, Typography, Button, TextField, Box, Card, CardContent, CardActions, Grid } from '@mui/material'; 
+import { Container, Typography, Button, TextField, Box, Card, CardContent, CardActions, Grid, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const PasswordManager = () => {
-  const [passwords, setPasswords] = useState([
-    { id: 1, site: 'Facebook', password: 'old_password_123' },
-    { id: 2, site: 'Google', password: 'old_password_456' },
-    { id: 3, site: 'Twitter', password: 'old_password_789' }
-  ]);
-
-  // Use an object to track new passwords for each site
-  const [newPasswords, setNewPasswords] = useState({});
-
+  const [passwords, setPasswords] = useState([]); // Empty array for dynamic platforms
+  const [newPlatform, setNewPlatform] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPasswords, setNewPasswords] = useState({}); // Track new passwords for each platform
+  const [showSnackbar, setShowSnackbar] = useState(false);
   const navigate = useNavigate();
+
+  // Handle adding new password
+  const handleAddNewPassword = () => {
+    if (newPlatform && newPassword) {
+      const newPasswordEntry = {
+        id: Date.now(), // Unique id based on timestamp
+        site: newPlatform,
+        password: newPassword,
+      };
+      setPasswords([...passwords, newPasswordEntry]); // Add the new password to the list
+      setNewPlatform('');
+      setNewPassword('');
+      setShowSnackbar(true); // Show success message
+    } else {
+      alert("Please provide both platform and password.");
+    }
+  };
 
   // Handle password change
   const handlePasswordChange = (id) => {
-    const updatedPasswords = passwords.map(password => 
+    const updatedPasswords = passwords.map(password =>
       password.id === id ? { ...password, password: newPasswords[id] || password.password } : password
     );
     setPasswords(updatedPasswords);
     // Reset the new password input after change
     setNewPasswords(prev => ({ ...prev, [id]: '' }));
-  };
-
-  const handleLogout = () => {
-    // Logic to log out (clear auth token, etc.)
-    navigate('/login'); // Redirect to login
   };
 
   const handleNewPasswordChange = (id, newPassword) => {
@@ -38,10 +46,38 @@ const PasswordManager = () => {
       <Typography variant="h4" gutterBottom>
         Password Manager
       </Typography>
-      {/* <Button variant="contained" color="secondary" onClick={handleLogout}>
-        Logout
-      </Button> */}
 
+      {/* Form to add new platform */}
+      <Box mb={3}>
+        <TextField
+          label="Platform Name"
+          variant="outlined"
+          fullWidth
+          value={newPlatform}
+          onChange={(e) => setNewPlatform(e.target.value)}
+          size="small"
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Password"
+          variant="outlined"
+          fullWidth
+        //   type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          size="small"
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddNewPassword}
+          sx={{ mt: 2 }}
+        >
+          Add New Platform
+        </Button>
+      </Box>
+
+      {/* Displaying added platforms */}
       <Grid container spacing={3} mt={2}>
         {passwords.map((password) => (
           <Grid item xs={12} sm={6} md={4} key={password.id}>
@@ -73,6 +109,15 @@ const PasswordManager = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Snackbar for success message */}
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={4000}
+        onClose={() => setShowSnackbar(false)}
+      >
+        <Alert severity="success">New platform added successfully!</Alert>
+      </Snackbar>
     </Container>
   );
 };
