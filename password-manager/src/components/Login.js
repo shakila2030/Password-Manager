@@ -34,6 +34,10 @@ const Login = () => {
     }
   };
 
+  const handleSignUpRedirect = () => {
+    navigate('/'); // Redirect to the signup page
+  };
+
   return (
     <Container maxWidth="xs">
       <Box mt={8} display="flex" flexDirection="column" alignItems="center">
@@ -69,6 +73,14 @@ const Login = () => {
             Login
           </Button>
         </form>
+        <Button
+          variant="text"
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={handleSignUpRedirect}
+        >
+          Don't have an account?
+        </Button>
       </Box>
     </Container>
   );

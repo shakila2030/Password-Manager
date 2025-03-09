@@ -13,7 +13,7 @@ const PasswordManager = () => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    // Retrieve userId from localStorage
+    // Retrieve userId from localStorage to verify if the user is logged in
     const storedUserId = localStorage.getItem('userId');
     if (storedUserId) {
       setUserId(storedUserId);  // Store the userId in state
@@ -32,7 +32,7 @@ const PasswordManager = () => {
   
       fetchPlatforms();
     } else {
-      // Redirect to login if no userId is found
+      // Redirect to login if no userId is found in localStorage
       navigate('/login');
     }
   }, [navigate]);
@@ -68,7 +68,7 @@ const PasswordManager = () => {
   };
 
   // Handle password change
-const handlePasswordChange = async (id) => {
+  const handlePasswordChange = async (id) => {
     const passwordToUpdate = passwords.find(password => password.id === id);
     const updatedPassword = newPasswords[id] || passwordToUpdate.platformPassword;
   
@@ -122,7 +122,6 @@ const handlePasswordChange = async (id) => {
           label="Password"
           variant="outlined"
           fullWidth
-        //   type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           size="small"
@@ -169,8 +168,6 @@ const handlePasswordChange = async (id) => {
           </Grid>
         ))}
       </Grid>
-
-
 
       {/* Snackbar for success message */}
       <Snackbar

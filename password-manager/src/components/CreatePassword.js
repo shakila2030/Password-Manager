@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, TextField, Box, Snackbar, Alert, IconButton } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePassword = () => {
   const [manualPassword, setManualPassword] = useState('');
@@ -8,6 +9,7 @@ const CreatePassword = () => {
   const [error, setError] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [validPassword, setValidPassword] = useState(false);
+  const navigate = useNavigate();
 
   // Password validation regex
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -55,6 +57,14 @@ const CreatePassword = () => {
     navigator.clipboard.writeText(password);
     setShowSnackbar(true);
   };
+
+  // Check if the user is logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login'); // Redirect to login if not authenticated
+    }
+  }, [navigate]);
 
   return (
     <Container>
@@ -115,11 +125,11 @@ const CreatePassword = () => {
           variant="contained"
           color="primary"
           onClick={handleGeneratePassword}
-          sx={{ mr: 2, mb:2 }}
+          sx={{ mr: 2, mb: 2 }}
         >
           Generate
         </Button>
-        
+
         {generatedPassword && (
           <>
             <TextField
