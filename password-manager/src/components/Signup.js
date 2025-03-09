@@ -3,7 +3,7 @@ import { TextField, Button, Typography, Container, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 
 const Signup = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate(); 
@@ -15,7 +15,7 @@ const Signup = () => {
       return;
     }
     // Implement signup logic (create user, call API, etc.)
-    console.log('Signing up with', email, password);
+    console.log('Signing up with', username, password);
     navigate('/dashboard');
   };
 
@@ -25,14 +25,13 @@ const Signup = () => {
         <Typography variant="h5">Sign Up</Typography>
         <form onSubmit={handleSubmit} style={{ width: '100%' }}>
           <TextField
-            label="Email"
+            label="Username"
             variant="outlined"
             fullWidth
             required
             margin="normal"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             label="Password"
