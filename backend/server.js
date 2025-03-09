@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const platformRoutes = require('./routes/platforms'); // Import platforms route
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/platforms', platformRoutes); // Add platforms route
 
 // Start server
 const PORT = process.env.PORT || 5000;

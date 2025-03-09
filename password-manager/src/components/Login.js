@@ -1,17 +1,37 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';  // Updated import
+import { useNavigate } from 'react-router-dom'; // Updated import
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement login logic (validate credentials, call API, etc.)
-    console.log('Logging in with', username, password);
-    navigate('/dashboard');  
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', { // Ensure correct backend URL
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Save the JWT token in localStorage for further requests
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.userId);
+        console.log('Login successful');
+        navigate('/password-manager');  // Redirect to the dashboard
+      } else {
+        setErrorMessage(data.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login', error);
+      setErrorMessage('Something went wrong. Please try again.');
+    }
   };
 
   return (
@@ -19,6 +39,7 @@ const Login = () => {
       <Box mt={8} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h5">Login</Typography>
         <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+          {errorMessage && <Typography color="error">{errorMessage}</Typography>}
           <TextField
             label="Username"
             variant="outlined"

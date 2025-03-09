@@ -14,7 +14,7 @@ function App() {
        <Navbar />
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/" element={<Signup />} />
       <Route path="/password-manager" element={<PasswordManager />} />
       <Route path="/create-password" element={<CreatePassword />} />
       {/* Other routes */}
